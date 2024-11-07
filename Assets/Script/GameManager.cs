@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     //ƒŠƒUƒ‹ƒg
     [SerializeField] Canvas resultPanel;
 
+    float shotTimer = 0.0f;
+    Vector3 mousePos= Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +29,22 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        shotTimer += Time.deltaTime;
+
+        mousePos=Input.mousePosition;
+
+        if (Input.GetMouseButton(0) &&
+            !player.isShot &&
+            shotTimer>0.4f)
+        {
+            if (!player.isHave)
+            {
+                return;
+            }
+            player.isShot = true;
+            player.ShotSetUp(mousePos);
+            shotTimer = 0.0f;
+        }
 
         if (player.isGoal)
         {

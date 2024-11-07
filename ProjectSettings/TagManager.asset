@@ -8,11 +8,16 @@ TagManager:
   - Wall
   - Gun
   - Goal
+  - MoveWall
+  - Switch
+  - Bullet
+  - Enemy
+  - Bom
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 

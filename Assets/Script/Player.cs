@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] PlayerHand hand;
+
     float speed = 5.0f;
     [SerializeField] Rigidbody rb;
 
     [SerializeField]
     public bool isHaveGun = false;
+    public bool isShot = false;
+    Vector3 clickPos = Vector3.zero;
 
-    Vector3 direction;
+    [SerializeField]Vector3 direction;
 
     public bool isGoal;
+    public bool isHave;
 
     //マウスの方向を見る
     [SerializeField] UnityEngine.Camera mainCamera;
@@ -21,6 +26,7 @@ public class Player : MonoBehaviour
     float distance = 0;
 
     public Vector3 lookPoint;
+    [SerializeField]Vector3 forward;
 
     // Start is called before the first frame update
     void Start()
@@ -34,10 +40,16 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-
+        forward = transform.forward;
         Move();
         Direction();
-        
+
+        if (isShot)
+        {
+            hand.Shot(clickPos,forward);
+            isShot = false;
+        }
+
 
     }
 
@@ -48,15 +60,11 @@ public class Player : MonoBehaviour
         direction.z = Input.GetAxis("Vertical");
         direction.x = Input.GetAxis("Horizontal");
 
-        if (Input.GetMouseButtonDown(0) && isHaveGun)
-        {
-            Debug.Log("撃った");
-
-        }
-
+        
         rb.velocity = direction * speed;
     }
 
+    //マウスの方向向く
     void Direction()
     {
         // カメラとマウスの位置を元にRayを準備
@@ -74,16 +82,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void ShotSetUp(Vector3 clickPosition)
+    {
+        clickPos = clickPosition;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Gun"))
         {
-            collision.gameObject.transform.parent = gameObject.transform;
-            /*collision.gameObject.transform.localPosition = new Vector3(collision.gameObject.transform.localPosition.x, collision.gameObject.transform.localPosition.y + 0.5f, collision.gameObject.transform.localPosition.z);
-            Quaternion GunRotation = collision.transform.rotation;
-            GunRotation = new Quaternion(collision.transform.localRotation.x, collision.transform.rotation.y, collision.transform.rotation.z, collision.transform.rotation.w);
-            collision.transform.rotation = GunRotation;
-            isHaveGun = true;*/
+            hand.SetParent(collision.gameObject);
+            isHave = true;
         }
 
         if (collision.gameObject.CompareTag("Goal"))
