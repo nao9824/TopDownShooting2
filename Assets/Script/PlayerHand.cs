@@ -36,7 +36,7 @@ public class PlayerHand : MonoBehaviour
     public void Shot(Vector3 clickPosition,Vector3 direction)
     {
 
-        haveGun.Fire(clickPosition,direction,haveGun);
+        haveGun.Fire(haveGun);
 
     }
 }

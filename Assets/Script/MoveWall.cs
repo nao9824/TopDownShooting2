@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveWall : MonoBehaviour
 {
-    [SerializeField] private List<Switch> switchs = new List<Switch>();
+    [SerializeField] private List<GameObject> switchs = new List<GameObject>();
 
     bool open = false;
     

@@ -5,16 +5,20 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] EnemyGun enemyGun;
+
     NavMeshAgent navmeshAgent = null;
     [SerializeField] private List<GameObject> target = new List<GameObject>();
     private int currentTargetIndex = 0; // 現在の目標インデックスを追加
-    [SerializeField] public int hp = 30;
+    [SerializeField] public int hp = 3;
     public bool isDead = false;
     public float stoppingDistance = 0.5f; // 到達距離の設定
 
     Vector3 playerPos;
     Vector3 enemyPos;
-
+    float findAngle = 90;
+    float rotationSpeed = 4.0f;
+    
     public Transform player; // プレイヤーのTransform
     public float viewDistance = 10.0f; // 敵の視界距離
     public float lookAroundSpeed = 2.0f; // 視線を移動する速度
@@ -22,6 +26,7 @@ public class Enemy : MonoBehaviour
     private bool isPlayerLost = false;
     private bool lookingRight = true; // 視線が右方向に向いているかどうか
     private Quaternion originalRotation;
+    float rotateTimer = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -41,14 +46,27 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (isDead)
         {
             Destroy(gameObject);
-            return;
         }
+        else
+        {
+            
+            if (isPlayerLost)
+            {
+                LookAround();
+            }
 
-        Move();
-        Find();
+            if (!isPlayerLost)
+            {
+                Move();
+                rotateTimer = 0.0f;
+
+            }
+            Find();
+        }
     }
 
     void Move()
@@ -73,15 +91,37 @@ public class Enemy : MonoBehaviour
         float theta = Mathf.Acos(dot) * Mathf.Rad2Deg;//角度求める
 
         //もしthetaが規定以上の角度だったらRay飛ばす
-        if (theta <= 90)
+        if (theta <= findAngle)
         {
             Ray ray = new Ray(transform.position,direction);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
+                Debug.DrawRay(ray.origin, ray.direction);
                 if (hit.collider.CompareTag("Player"))
                 {
-                    Debug.Log("当たった");
+                    Debug.Log("見つけた");
+
+                    // 敵をプレイヤーの方向に向ける
+                    Vector3 lookDirection = (player.position - enemyGun.transform.position).normalized; 
+                    Quaternion targetRotation = Quaternion.LookRotation(lookDirection); 
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+                    //Moveを止める
+                    if (!isDead)
+                    {
+                        navmeshAgent.isStopped = true;
+                    }
+                    enemyGun.Fire(enemyGun);
+                }
+                else
+                {
+                    if (rotateTimer <= 0.0f)
+                    {
+                        isPlayerLost = true;
+                        originalRotation = transform.rotation;//元の回転を保存
+                        rotateTimer = 0.0f;
+                    }
                 }
             }
         }
@@ -91,9 +131,17 @@ public class Enemy : MonoBehaviour
     //見失った時あたりを見回す
     void LookAround()
     {
+        rotateTimer += Time.deltaTime;
+
         float angle = maxLookAngle * Mathf.Sin(Time.time * lookAroundSpeed); 
         Quaternion targetRotation = originalRotation * Quaternion.Euler(0, angle, 0); 
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * lookAroundSpeed);
-    
+
+        if (rotateTimer >= 3.0f)
+        {
+            isPlayerLost = false;
+            navmeshAgent.isStopped = false;
+            
+        }
     }
 }

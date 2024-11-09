@@ -7,51 +7,45 @@ using static UnityEngine.UI.Image;
 public class Gun : MonoBehaviour
 {
     [SerializeField] Bullet bullet;
-    [SerializeField] Enemy enemy;
     Bullet b;
     RaycastHit hit;
+    protected Vector3 aimPoint;
+    float shotTimer = 0.0f;
+    protected float shotTime = 0.4f;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        // 初期化処理
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
-        
+        shotTimer += Time.deltaTime;
+
+        aimPoint = transform.forward;
     }
 
-    public void Fire(Vector3 clickPosition ,Vector3 direction,Gun gun)
+    public void Fire(Gun gun)
     {
-        Ray ray = Camera.main.ScreenPointToRay(clickPosition);
+        Ray ray = new Ray(transform.position, aimPoint);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             Vector3 direction2 = (hit.point - transform.position).normalized;
-            b = Instantiate(bullet, transform.position, Quaternion.identity);
-            b.SetDirection(direction2,gun);
+            if (shotTimer > shotTime)
+            {
+                b = Instantiate(bullet, transform.position, Quaternion.identity);
+                b.SetDirection(direction2, gun);
+                shotTimer = 0.0f;
+            }
             BulletHit();
-            if(hit.collider.gameObject.name == "Enemy")
-            {
-                enemy.hp--;
-                if (enemy.hp <= 0)
-                {
-                    enemy.isDead = true;
-                }
-            }
-
-            if (b.isExp)
-            {
-
-            }
+            
         }
-       
     }
 
     void BulletHit()
     {
         Debug.Log("弾が「" + hit.collider.gameObject.name + "」にヒットしました。");
     }
-
 }

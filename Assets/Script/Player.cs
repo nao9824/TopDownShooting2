@@ -23,10 +23,12 @@ public class Player : MonoBehaviour
     //マウスの方向を見る
     [SerializeField] UnityEngine.Camera mainCamera;
     Plane plane = new Plane();
-    float distance = 0;
+//    float distance = 0;
 
     public Vector3 lookPoint;
     [SerializeField]Vector3 forward;
+
+    [SerializeField] LayerMask rayhitLayer;
 
     // Start is called before the first frame update
     void Start()
@@ -70,14 +72,27 @@ public class Player : MonoBehaviour
         // カメラとマウスの位置を元にRayを準備
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-
+        RaycastHit raycastHit;
         // プレイヤーの高さにPlaneを更新して、カメラの情報を元に地面判定して距離を取得
         plane.SetNormalAndPosition(Vector3.up, transform.localPosition);
-        if (plane.Raycast(ray, out distance))
+        if (Physics.Raycast(ray, out raycastHit,100, rayhitLayer))
         {
 
             // 距離を元に交点を算出して、交点の方を向く
-            lookPoint = ray.GetPoint(distance);
+            lookPoint = raycastHit.point;
+
+            if ((hand.transform.childCount > 0))
+            {
+
+                float h = hand.transform.GetChild(0).transform.position.y - lookPoint.y;
+                float raylength = ray.direction.magnitude;
+                float theta = Mathf.Acos(Vector3.Dot(-ray.direction, Vector3.up));
+                float cosTheta = Mathf.Cos(theta);
+                float S = h / cosTheta;
+                Vector3 point = lookPoint + (-ray.direction) * S;
+                hand.transform.LookAt(point);
+            }
+            lookPoint.y = 1.0f;
             transform.LookAt(lookPoint);
         }
     }

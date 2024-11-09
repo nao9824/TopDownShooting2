@@ -7,6 +7,8 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private Player player;   //プレイヤー情報格納用
     private Vector3 offset;      //相対距離取得用
 
+    [SerializeField] LayerMask groundLayer;
+
     Vector3 mousePos;
 
     //シェイク
@@ -47,7 +49,7 @@ public class CameraMove : MonoBehaviour
 
 
         //新しいトランスフォームの値を代入する
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit,Mathf.Infinity,groundLayer))
         {
             transform.position = player.transform.position + offset + ((hit.point - player.transform.position) / 10);
         }
