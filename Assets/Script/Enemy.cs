@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     NavMeshAgent navmeshAgent = null;
     [SerializeField] private List<GameObject> target = new List<GameObject>();
     private int currentTargetIndex = 0; // 現在の目標インデックスを追加
-    [SerializeField] public int hp = 3;
+    [SerializeField] public int hp = 5;
     public bool isDead = false;
     public float stoppingDistance = 0.5f; // 到達距離の設定
 
@@ -113,8 +113,9 @@ public class Enemy : MonoBehaviour
                     if (!isDead)
                     {
                         navmeshAgent.isStopped = true;
+
+                        enemyGun.Fire(enemyGun);
                     }
-                    enemyGun.Fire(enemyGun);
                 }
                 else
                 {

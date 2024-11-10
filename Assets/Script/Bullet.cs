@@ -39,8 +39,11 @@ public class Bullet : MonoBehaviour
             rb.velocity = dir * speed;
 
             // LineRenderer‚ÌˆÊ’u‚ğXV
-            lineRenderer.SetPosition(0, haveGun.transform.position);
-            lineRenderer.SetPosition(1, transform.position);
+            if (haveGun != null)
+            {
+                lineRenderer.SetPosition(0, haveGun.transform.position);
+                lineRenderer.SetPosition(1, transform.position);
+            }
         }
         else
         {

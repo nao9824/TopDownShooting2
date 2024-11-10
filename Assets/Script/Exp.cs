@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Exp : MonoBehaviour
 {
@@ -32,9 +33,24 @@ public class Exp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Bom"))
+        Vector3 hitPos=other.transform.position;
+        Vector3 expPos = transform.position;
+        Vector3 direction = (hitPos - expPos).normalized;//距離求めて正規化
+
+        Ray ray = new Ray(transform.position, direction);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
-            other.GetComponent<Bom>().BomExp();
+            Debug.DrawRay(ray.origin, ray.direction);
+            Debug.Log("爆発が「" + hit.collider.gameObject.name + "」にヒットしました。");
+
+            if (hit.collider.CompareTag("Bom"))
+            {
+                
+            }
+            
         }
+
     }
 }

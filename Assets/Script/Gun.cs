@@ -20,7 +20,7 @@ public class Gun : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Update()
+    public virtual void Update()
     {
         shotTimer += Time.deltaTime;
 
@@ -35,9 +35,12 @@ public class Gun : MonoBehaviour
             Vector3 direction2 = (hit.point - transform.position).normalized;
             if (shotTimer > shotTime)
             {
-                b = Instantiate(bullet, transform.position, Quaternion.identity);
-                b.SetDirection(direction2, gun);
-                shotTimer = 0.0f;
+                if (gun != null)
+                {
+                    b = Instantiate(bullet, transform.position, Quaternion.identity);
+                    b.SetDirection(direction2, gun);
+                    shotTimer = 0.0f;
+                }
             }
             BulletHit();
             
