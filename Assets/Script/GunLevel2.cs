@@ -1,20 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyGun : Gun
+public class GunLevel2 : Gun
 {
-    
+
     void Start()
     {
         // オーバーライドした shotTime の値を設定します
-        shotTime = 0.3f; 
+        shotTime = 0.1f; // 例: 0.1秒に設定
     }
 
-    
-    /*public override void Fire(Gun gun)
-    {
-        
-    }*/
 }

@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     Vector3 playerPos;
     Vector3 enemyPos;
     float findAngle = 90;
-    float rotationSpeed = 4.0f;
+    float rotationSpeed = 10.0f;
     
     public Transform player; // プレイヤーのTransform
     public float viewDistance = 10.0f; // 敵の視界距離
@@ -26,7 +26,8 @@ public class Enemy : MonoBehaviour
     private bool isPlayerLost = false;
     private bool lookingRight = true; // 視線が右方向に向いているかどうか
     private Quaternion originalRotation;
-    float rotateTimer = 0.0f;
+    float rotateTime = 3.0f;
+    float rotateTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -62,7 +63,6 @@ public class Enemy : MonoBehaviour
             if (!isPlayerLost)
             {
                 Move();
-                rotateTimer = 0.0f;
 
             }
             Find();
@@ -101,6 +101,8 @@ public class Enemy : MonoBehaviour
                 if (hit.collider.CompareTag("Player"))
                 {
                     Debug.Log("見つけた");
+                    rotateTimer = rotateTime;
+                    isPlayerLost = false;
 
                     // 敵をプレイヤーの方向に向ける
                     Vector3 lookDirection = (player.position - enemyGun.transform.position).normalized; 
@@ -116,11 +118,11 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 {
-                    if (rotateTimer <= 0.0f)
+                    if (rotateTimer > 0.0f)
                     {
                         isPlayerLost = true;
                         originalRotation = transform.rotation;//元の回転を保存
-                        rotateTimer = 0.0f;
+                        
                     }
                 }
             }
@@ -131,13 +133,13 @@ public class Enemy : MonoBehaviour
     //見失った時あたりを見回す
     void LookAround()
     {
-        rotateTimer += Time.deltaTime;
+        rotateTimer -= Time.deltaTime;
 
         float angle = maxLookAngle * Mathf.Sin(Time.time * lookAroundSpeed); 
         Quaternion targetRotation = originalRotation * Quaternion.Euler(0, angle, 0); 
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * lookAroundSpeed);
 
-        if (rotateTimer >= 3.0f)
+        if (rotateTimer <= 0.0f)
         {
             isPlayerLost = false;
             navmeshAgent.isStopped = false;

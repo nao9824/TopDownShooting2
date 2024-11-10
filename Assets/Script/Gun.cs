@@ -6,11 +6,11 @@ using static UnityEngine.UI.Image;
 
 public class Gun : MonoBehaviour
 {
-    [SerializeField] Bullet bullet;
-    Bullet b;
-    RaycastHit hit;
+    [SerializeField] protected Bullet bullet;
+    protected Bullet b;
+    protected RaycastHit hit;
     protected Vector3 aimPoint;
-    float shotTimer = 0.0f;
+    protected float shotTimer = 0.0f;
     protected float shotTime = 0.4f;
 
     // Start is called before the first frame update
@@ -27,7 +27,7 @@ public class Gun : MonoBehaviour
         aimPoint = transform.forward;
     }
 
-    public void Fire(Gun gun)
+    public virtual void Fire(Gun gun)
     {
         Ray ray = new Ray(transform.position, aimPoint);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
