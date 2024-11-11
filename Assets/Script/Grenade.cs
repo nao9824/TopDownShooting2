@@ -7,7 +7,7 @@ public class Grenade : MonoBehaviour
     [SerializeField] Exp exp;
     Rigidbody rb;
 
-    float speed = 5.0f;
+    float speed = 7.0f;
     Vector3 dir;
 
     // Start is called before the first frame update

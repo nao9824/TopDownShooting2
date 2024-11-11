@@ -6,13 +6,22 @@ using UnityEngine.AI;
 public class Exp : MonoBehaviour
 {
     CameraMove cameraMove;
-    float expScale = 50.0f;
-    float expScaleMax = 5.0f;
+    float expScale = 40.0f;
+    float expScaleMax = 7.0f;
+
+    //徐々に透明にする
+    public float duration = 0.1f; // フェードアウトの時間
+    private Material material;
+    private Color initialColor;
+    private float timer = 0.0f;
+    private bool isFading = false;
 
     // Start is called before the first frame update
     void Start()
     {
         cameraMove = Camera.main.GetComponent<CameraMove>();
+        material = GetComponent<Renderer>().material; 
+        initialColor = material.color;
     }
 
     // Update is called once per frame
@@ -20,6 +29,8 @@ public class Exp : MonoBehaviour
     {
 
         Exposion();
+        Fade();
+
         if (transform.localScale.x >= expScaleMax)
         {
             Destroy(gameObject);
@@ -28,12 +39,29 @@ public class Exp : MonoBehaviour
 
     public void Exposion()
     {
+        isFading = true;
         Vector3 scale;
         scale = transform.localScale;
         scale += new Vector3(expScale * Time.deltaTime, expScale * Time.deltaTime, expScale * Time.deltaTime);
         transform.localScale = scale;
         cameraMove.ShakeStart(0.1f, 0.1f, -0.1f);
 
+    }
+
+    void Fade()
+    {
+        if (isFading)
+        { // フェードアウト処理
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(initialColor.a, 0, timer / duration);
+            // 新しいカラーを設定
+            material.color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
+            // フェードアウトが完了したらフェードを停止
+            if (timer >= duration)
+            {
+                isFading = false; timer = 0.0f;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)

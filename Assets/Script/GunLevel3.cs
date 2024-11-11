@@ -16,7 +16,7 @@ public class GunLevel3 : Gun
     {
         
         // オーバーライドした shotTime の値を設定します
-        shotTime = 0.3f; 
+        shotTime = 0.15f; 
     }
 
     new void Update()
