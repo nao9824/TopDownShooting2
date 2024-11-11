@@ -154,12 +154,16 @@ MonoBehaviour:
   rb: {fileID: 4111570566299734600}
   isHaveGun: 0
   isShot: 0
-  direction: {x: 0, y: 0, z: 0}
   isGoal: 0
   isHave: 0
+  layer:
+    serializedVersion: 2
+    m_Bits: 1
   mainCamera: {fileID: 0}
   lookPoint: {x: 0, y: 0, z: 0}
-  forward: {x: 0, y: 0, z: 0}
+  rayhitLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1482728289416880435
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,13 +189,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1482728289416880435}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.41, y: 0, z: 0.28}
+  m_LocalRotation: {x: 0.70710665, y: 0.70710665, z: -0.0004529711, w: 0.00045297094}
+  m_LocalPosition: {x: 0.74, y: 0, z: 0.2800002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5399340023995178427}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.073, y: 180, z: 90}
 --- !u!114 &7293337744589391269
 MonoBehaviour:
   m_ObjectHideFlags: 0

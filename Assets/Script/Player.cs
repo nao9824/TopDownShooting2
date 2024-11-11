@@ -8,53 +8,40 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerHand hand;
 
     float speed = 5.0f;
-    float goalSpeed = 1.0f;
     [SerializeField] Rigidbody rb;
 
-    [SerializeField]
     public bool isHaveGun = false;
     public bool isShot = false;
     Vector3 clickPos = Vector3.zero;
 
-    [SerializeField]Vector3 direction;
+    Vector3 direction;
 
     public bool isGoal;
     public bool isHave;
 
+    [SerializeField] LayerMask layer;
+
     //ƒ}ƒEƒX‚Ì•ûŒü‚ðŒ©‚é
     [SerializeField] UnityEngine.Camera mainCamera;
     Plane plane = new Plane();
-//    float distance = 0;
 
     public Vector3 lookPoint;
-    [SerializeField]Vector3 forward;
 
     [SerializeField] LayerMask rayhitLayer;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-        
-
-    }
 
     // Update is called once per frame
     void Update()
     {
 
-        forward = transform.forward;
         Move();
         Direction();
 
         if (isShot)
         {
-            hand.Shot(clickPos,forward);
+            hand.Shot(clickPos, transform.forward);
             isShot = false;
         }
-
-        
-
     }
 
     private void Move()
@@ -63,7 +50,8 @@ public class Player : MonoBehaviour
 
         if (isGoal)
         {
-            direction.z = goalSpeed;
+            speed = 1.0f;
+            direction.z = speed;
         }
         else
         {
@@ -115,6 +103,7 @@ public class Player : MonoBehaviour
         {
             hand.SetParent(collision.gameObject);
             isHave = true;
+            collision.gameObject.layer = layer;
         }
 
         if (collision.gameObject.CompareTag("Goal"))

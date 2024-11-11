@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    Rigidbody rb;
     LineRenderer lineRenderer;
     [SerializeField] Enemy enemy;
     [SerializeField] Bom bom;
     Gun haveGun;
-    float speed = 25.0f;
-    Vector3 dir;
-    bool hitDetected = false;//íÖíeÇµÇΩÇ©
-    
+
+    float max = 0.1f;
+    Vector3 start;
+    Vector3 end;
+    float timer;
+    float minLine = 0.1f;
+
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        lineRenderer = GetComponent<LineRenderer>();
-
+        
         if (lineRenderer == null)
         {
             Debug.LogError("LineRendererÇ™å©Ç¬Ç©ÇËÇ‹ÇπÇÒÅI");
@@ -30,69 +30,38 @@ public class Bullet : MonoBehaviour
         lineRenderer.endWidth = 0.1f;
     }
 
+    private void Awake()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (!hitDetected)
-        {
-            rb.velocity = dir * speed;
+        timer += Time.deltaTime;
+        
+        start = lineRenderer.GetPosition(0);
+        end = lineRenderer.GetPosition(1);
+        float distance = Vector3.Distance(start, end);
+        float t = timer / max;
 
-            // LineRendererÇÃà íuÇçXêV
-            if (haveGun != null)
-            {
-                lineRenderer.SetPosition(0, haveGun.transform.position);
-                lineRenderer.SetPosition(1, transform.position);
-            }
+        if (distance > minLine)
+        {
+            Vector3 newStart = Vector3.Lerp(start, end, t);
+            lineRenderer.SetPosition(0, newStart);
         }
         else
         {
-            Vector3 start = lineRenderer.GetPosition(0);
-            Vector3 end = lineRenderer.GetPosition(1);
-            float distance = Vector3.Distance(start, end);
-
-            if (distance > 0.1f)
-            {
-                Vector3 newStart = Vector3.Lerp(start, end, Time.deltaTime * speed);
-                lineRenderer.SetPosition(0, newStart);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
+
     }
 
-    public void SetDirection(Vector3 direction, Gun gun)
+    public void SetDirection(Vector3 startPoint, Vector3 endPoint)
     {
-        dir = direction;
-        Debug.Log("Direction set to: " + direction);
-        haveGun = gun;
+        lineRenderer.SetPosition(0, startPoint);
+        lineRenderer.SetPosition(1, endPoint);
+
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Wall") || other.CompareTag("MoveWall") || other.CompareTag("Switch") || other.CompareTag("Enemy") || other.CompareTag("Bom"))
-        {
-            hitDetected = true;
-            rb.velocity = Vector3.zero; // íeÇÃë¨ìxÇÉ[ÉçÇ…Ç∑ÇÈ
-
-            if (other.CompareTag("Bom"))
-            {
-                //bom.BomExp();
-                other.GetComponent<Bom>().BomExp();
-                Destroy(other.gameObject);  
-            }
-
-            if (other.CompareTag("Enemy"))
-            {
-                enemy = other.GetComponent<Enemy>();
-                enemy.hp--;
-                if (enemy.hp <= 0)
-                {
-                    enemy.isDead = true;
-                }
-            }
-        }
-    }
-   
 }

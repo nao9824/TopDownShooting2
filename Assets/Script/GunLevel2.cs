@@ -7,11 +7,9 @@ public class GunLevel2 : Gun
 
     protected override void Start()
     {
-        bc = gameObject.GetComponent<BoxCollider>();
-        bc.isTrigger = true;
-
+        
         // オーバーライドした shotTime の値を設定します
-        shotTime = 0.2f; 
+        shotTime = 0.3f; 
     }
 
 }

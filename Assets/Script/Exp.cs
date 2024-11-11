@@ -5,17 +5,22 @@ using UnityEngine.AI;
 
 public class Exp : MonoBehaviour
 {
+    CameraMove cameraMove;
+    float expScale = 50.0f;
+    float expScaleMax = 5.0f;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        cameraMove = Camera.main.GetComponent<CameraMove>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
         Exposion();
-        if (transform.localScale.x >= 5.0f)
+        if (transform.localScale.x >= expScaleMax)
         {
             Destroy(gameObject);
         }
@@ -25,10 +30,10 @@ public class Exp : MonoBehaviour
     {
         Vector3 scale;
         scale = transform.localScale;
-        scale.x += 4.0f * Time.deltaTime;
-        scale.y += 4.0f * Time.deltaTime;
-        scale.z += 4.0f * Time.deltaTime;
+        scale += new Vector3(expScale * Time.deltaTime, expScale * Time.deltaTime, expScale * Time.deltaTime);
         transform.localScale = scale;
+        cameraMove.ShakeStart(0.1f, 0.1f, -0.1f);
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -44,7 +49,7 @@ public class Exp : MonoBehaviour
 
         Ray ray = new Ray(transform.position, direction);
         RaycastHit hit;
-
+        Debug.DrawRay(transform.position, direction);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             Debug.DrawRay(ray.origin, ray.direction);
@@ -57,7 +62,7 @@ public class Exp : MonoBehaviour
             }
             if (hit.collider.CompareTag("Enemy"))
             {
-                Destroy(hit.collider.gameObject);
+                hit.collider.gameObject.GetComponent<Enemy>().hp -= hit.collider.gameObject.GetComponent<Enemy>().hpMax;
             }
         }
 

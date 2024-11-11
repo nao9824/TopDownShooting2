@@ -16,6 +16,7 @@ public class CameraMove : MonoBehaviour
     float shakeNumX;
     float shakeNumY;
     float shakeTimer;
+    bool isShake = false;
 
     float max;
     float min;
@@ -28,12 +29,9 @@ public class CameraMove : MonoBehaviour
         // MainCamera(自分自身)とplayerとの相対距離を求める
         offset = transform.position - player.transform.position;
 
-
         cameraPosition = transform.position;
         shakeNumX = 0;
         shakeNumY = 0;
-
-
         max = 0;
         min = 0;
     }
@@ -47,19 +45,28 @@ public class CameraMove : MonoBehaviour
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-
         //新しいトランスフォームの値を代入する
         if (Physics.Raycast(ray, out hit,Mathf.Infinity,groundLayer))
         {
             transform.position = player.transform.position + offset + ((hit.point - player.transform.position) / 10);
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Debug.Log(worldPosition);
-        }
+    }
 
-        /*//シェイク
+    public void ShakeStart(float shakeTimer, float max, float min)
+    {
+        cameraPosition = transform.position;
+
+        this.shakeTimer = shakeTimer;
+        maxTime = shakeTimer;
+        this.max = max;
+        this.min = min;
+        isShake = true;
+        Shake();
+    }
+    void Shake()
+    {
+        //シェイク
         shakeTimer -= Time.deltaTime;
 
         if (shakeTimer >= 0)
@@ -78,15 +85,7 @@ public class CameraMove : MonoBehaviour
         {
 
             transform.position = cameraPosition;
-
-        }*/
-    }
-
-    public void ShakeStart(float shakeTimer, float max, float min)
-    {
-        this.shakeTimer = shakeTimer;
-        maxTime = shakeTimer;
-        this.max = max;
-        this.min = min;
+            isShake = false;
+        }
     }
 }

@@ -24,7 +24,7 @@ public class PlayerHand : MonoBehaviour
     {
         if (haveGun != null) {
 
-            Destroy(haveGun);
+            Destroy(haveGun.gameObject);
             haveGun = null;
 
         }

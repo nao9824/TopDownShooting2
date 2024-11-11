@@ -7,14 +7,14 @@ public class EnemyGun : Gun
 {
 
     int bulletNum = 5; 
-    float reloadDuration = 2.0f; // リロード時間
+    float reloadDuration = 1.0f; // リロード時間
     float reloadTimer = 0.0f;
     bool isReloading = false;
 
     protected override void Start()
     {
         // オーバーライドした shotTime の値を設定します
-        shotTime = 0.3f; 
+        shotTime = 0.2f; 
     }
 
     protected override void Update()
@@ -33,6 +33,11 @@ public class EnemyGun : Gun
 
     public override void Fire(Gun gun)
     {
+        if (gun == null)
+        {
+            return;
+        }
+
         if (!isReloading && bulletNum > 0)
         {
             Ray ray = new Ray(transform.position, aimPoint); if (Physics.Raycast(ray, out hit, Mathf.Infinity))
@@ -40,16 +45,16 @@ public class EnemyGun : Gun
                 Vector3 direction2 = (hit.point - transform.position).normalized;
                 if (shotTimer > shotTime)//射撃間隔のタイマーチェック
                 {
-                    if (gun != null)
-                    {
-                        b = Instantiate(bullet, transform.position, Quaternion.identity);
-                        b.SetDirection(direction2, gun);
-                        shotTimer = 0.0f;
-                        bulletNum--; // 弾数を減らす
-                        if (bulletNum <= 0) {
-                            isReloading = true; // リロードを開始
-                        }
-                    }
+                   
+                   b = Instantiate(bullet, transform.position, Quaternion.identity);
+                   b.SetDirection(transform.position, hit.point);
+                   shotTimer = 0.0f;
+                   bulletNum--; // 弾数を減らす
+                   if (bulletNum <= 0) 
+                   {
+                       isReloading = true; // リロードを開始
+                   }
+                   
                 }
             }
         }

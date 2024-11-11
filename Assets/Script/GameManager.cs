@@ -32,10 +32,11 @@ public class GameManager : MonoBehaviour
         mousePos=Input.mousePosition;
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
 
-
+        //’eŒ‚‚Â
         if (Input.GetMouseButton(0) &&
             !player.isShot)
         {
+            //e‚Á‚Ä‚È‚©‚Á‚½‚ç‘ŠúƒŠƒ^[ƒ“
             if (!player.isHave)
             {
                 return;

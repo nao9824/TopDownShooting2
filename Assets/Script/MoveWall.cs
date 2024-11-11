@@ -7,13 +7,8 @@ public class MoveWall : MonoBehaviour
     [SerializeField] private List<GameObject> switchs = new List<GameObject>();
 
     bool open = false;
+    float downSpeed = 5.0f;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -35,8 +30,8 @@ public class MoveWall : MonoBehaviour
         if (open)
         {
             Vector3 pos = transform.position;
-            pos.y -= 0.01f;
+            pos.y -= downSpeed * Time.deltaTime;
             transform.position = pos;
         }
-        }
+    }
 }

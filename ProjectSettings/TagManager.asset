@@ -13,6 +13,7 @@ TagManager:
   - Bullet
   - Enemy
   - Bom
+  - Grenade
   layers:
   - Default
   - TransparentFX
