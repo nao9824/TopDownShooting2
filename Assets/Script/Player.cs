@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerHand hand;
 
     float speed = 5.0f;
+    float goalSpeed = 1.0f;
     [SerializeField] Rigidbody rb;
 
     [SerializeField]
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
             isShot = false;
         }
 
+        
 
     }
 
@@ -59,10 +61,15 @@ public class Player : MonoBehaviour
     {
         direction = Vector3.zero;
 
-        direction.z = Input.GetAxis("Vertical");
-        direction.x = Input.GetAxis("Horizontal");
-
-        
+        if (isGoal)
+        {
+            direction.z = goalSpeed;
+        }
+        else
+        {
+            direction.z = Input.GetAxis("Vertical");
+            direction.x = Input.GetAxis("Horizontal");
+        }
         rb.velocity = direction * speed;
     }
 

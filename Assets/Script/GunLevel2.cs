@@ -5,10 +5,13 @@ using UnityEngine;
 public class GunLevel2 : Gun
 {
 
-    void Start()
+    protected override void Start()
     {
+        bc = gameObject.GetComponent<BoxCollider>();
+        bc.isTrigger = true;
+
         // オーバーライドした shotTime の値を設定します
-        shotTime = 0.1f; // 例: 0.1秒に設定
+        shotTime = 0.2f; 
     }
 
 }

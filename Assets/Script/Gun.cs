@@ -8,23 +8,30 @@ public class Gun : MonoBehaviour
 {
     [SerializeField] protected Bullet bullet;
     protected Bullet b;
+    [SerializeField] protected BoxCollider bc;
     protected RaycastHit hit;
     protected Vector3 aimPoint;
     protected float shotTimer = 0.0f;
     protected float shotTime = 0.4f;
 
+    float rotationSpeed = 50;
+
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        // èâä˙âªèàóù
+        bc=gameObject.GetComponent<BoxCollider>();
+        bc.isTrigger = true;
+        
     }
 
     // Update is called once per frame
-    public virtual void Update()
+    protected virtual void Update()
     {
         shotTimer += Time.deltaTime;
 
         aimPoint = transform.forward;
+
+        transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
     }
 
     public virtual void Fire(Gun gun)

@@ -6,7 +6,6 @@ using UnityEngine.XR;
 public class PlayerHand : MonoBehaviour
 {
     Gun haveGun;
-    Gun hadGun;
 
     // Start is called before the first frame update
     void Start()
@@ -23,18 +22,18 @@ public class PlayerHand : MonoBehaviour
 
     public void SetParent(GameObject gun)
     {
-        if (haveGun != null) { 
-            hadGun=haveGun;
-            haveGun.transform.parent = null;
-            
+        if (haveGun != null) {
+
+            Destroy(haveGun);
+            haveGun = null;
+
         }
 
         gun.gameObject.TryGetComponent<Gun>(out haveGun);
         haveGun.transform.position = transform.position;
         haveGun.transform.rotation = transform.rotation;
         haveGun.transform.parent = transform;
-        Destroy(hadGun);
-
+        
     }
 
     public void Shot(Vector3 clickPosition,Vector3 direction)

@@ -12,8 +12,7 @@ public class Bullet : MonoBehaviour
     float speed = 25.0f;
     Vector3 dir;
     bool hitDetected = false;//’…’e‚µ‚½‚©
-    public bool isExp = false;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -79,8 +78,8 @@ public class Bullet : MonoBehaviour
 
             if (other.CompareTag("Bom"))
             {
-                isExp = true;
-                bom.BomExp();
+                //bom.BomExp();
+                other.GetComponent<Bom>().BomExp();
                 Destroy(other.gameObject);  
             }
 

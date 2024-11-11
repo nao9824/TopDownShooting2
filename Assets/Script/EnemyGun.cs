@@ -11,13 +11,13 @@ public class EnemyGun : Gun
     float reloadTimer = 0.0f;
     bool isReloading = false;
 
-    void Start()
+    protected override void Start()
     {
         // オーバーライドした shotTime の値を設定します
         shotTime = 0.3f; 
     }
 
-    public override void Update()
+    protected override void Update()
     {
         shotTimer += Time.deltaTime; if (isReloading)
         {

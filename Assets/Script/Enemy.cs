@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction);
                 if (hit.collider.CompareTag("Player"))
                 {
-                    Debug.Log("Œ©‚Â‚¯‚½");
+                    //Debug.Log("Œ©‚Â‚¯‚½");
                     rotateTimer = rotateTime;
                     isPlayerLost = false;
 

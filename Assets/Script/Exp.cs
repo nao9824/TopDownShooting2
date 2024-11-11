@@ -33,6 +33,11 @@ public class Exp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Wall"))
+        {
+            return;
+        }
+
         Vector3 hitPos=other.transform.position;
         Vector3 expPos = transform.position;
         Vector3 direction = (hitPos - expPos).normalized;//ãóó£ãÅÇﬂÇƒê≥ãKâª
@@ -47,9 +52,13 @@ public class Exp : MonoBehaviour
 
             if (hit.collider.CompareTag("Bom"))
             {
-                
+                hit.collider.gameObject.GetComponent<Bom>().BomExp();
+                Destroy(hit.collider.gameObject);
             }
-            
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                Destroy(hit.collider.gameObject);
+            }
         }
 
     }
